@@ -69,16 +69,18 @@ TOOL_PAGES.forEach(({ path, sentinel }) => {
 });
 
 test(
-  "active tool nav item is visually indicated",
+  "active nav item is marked when on that tool's page",
   { tag: "@smoke" },
   async ({ page }) => {
     await page.goto("chip");
-    const activeItem = page.locator('li[data-tooltip="Hardware Simulator"]');
-    await expect(activeItem).toHaveClass(/active/);
+    await page.waitForURL(/\/chip$/);
+    const chipNavItem = page.locator('li[data-tooltip="Hardware Simulator"]');
+    await expect(chipNavItem).toHaveClass(/\bactive\b/);
 
     await page.locator('li[data-tooltip="CPU Emulator"]').click();
-    await expect(page.locator('li[data-tooltip="CPU Emulator"]')).toHaveClass(/active/);
-    await expect(activeItem).not.toHaveClass(/active/);
+    await page.waitForURL(/\/cpu$/);
+    await expect(page.locator('li[data-tooltip="CPU Emulator"]')).toHaveClass(/\bactive\b/);
+    await expect(chipNavItem).not.toHaveClass(/\bactive\b/);
   },
 );
 
