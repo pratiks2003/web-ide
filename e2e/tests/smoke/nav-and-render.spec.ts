@@ -69,6 +69,20 @@ TOOL_PAGES.forEach(({ path, sentinel }) => {
 });
 
 test(
+  "active tool nav item is visually indicated",
+  { tag: "@smoke" },
+  async ({ page }) => {
+    await page.goto("chip");
+    const activeItem = page.locator('li[data-tooltip="Hardware Simulator"]');
+    await expect(activeItem).toHaveClass(/active/);
+
+    await page.locator('li[data-tooltip="CPU Emulator"]').click();
+    await expect(page.locator('li[data-tooltip="CPU Emulator"]')).toHaveClass(/active/);
+    await expect(activeItem).not.toHaveClass(/active/);
+  },
+);
+
+test(
   "en-PL pseudolocale renders Lingui macro strings pseudo-translated",
   { tag: "@smoke" },
   async ({ page }) => {
